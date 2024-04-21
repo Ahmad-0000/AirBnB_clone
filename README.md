@@ -1,23 +1,36 @@
-# Higher Level Programming
+# AirBnB Clone - The Console
 ## Description
-In the first trimester of this program, I mainly focused on
-learning to program using **C**. C is considered a low-level
-programming language that may be found a little bit hard to
-learn and apply in big projects. Programs written in C are
-well-known for their excellent **functionaliy**, **speed** and
-**portability**, but, as code grows, it will be harder and harder
-to maintain, debug and update these programs. Also, C doesn't
-contain the leisure of writing **OOP** applications.
+Have you ever visited this [website](https://www.airbnb.com/) ?
+Whether the answer is yes or no, I'm going to build a clone of it,
+make sure to visit it :)
 
-In this timester, I will focus mainly on learning to program
-in two high level programming languages ,**Python** and **JavaScript**
-and mainly on Python, to facilite the wheel of applications
-development. I will also consider some other topics, such as
-System Administration, Algorithms, Bash and C programming. One
-other thing to tell, in this trimester I will do 2 big projects
-[**Monty Opcode Interpreter**](https://github.com/Ahmad-0000/monty), the name says it all, and **AirBnB**
-in which I will clone a website with the same name.
+This project will last until the end of this porgram, so that
+I will be able to combine all, or most, of what I've learnt so
+far, it will be divided into sub-projects:
 
-> [!Note]
-> AirBnB project requires knowledge in a variety of topics, such  Networking, Front-end
-> Development, Back-end Development, ... etc, thus, it will be divided into small projects.
+  * The Console project
+  * Web static project
+  * MySql project
+  * "Web Framework - Templating" project
+  * RESTful API project
+  * Web Dynamic prject
+
+In each sub-project, a set of concepts will be introduced to
+be learnt and applied, so that by the end of this 1 year
+program I will be able to build my own websites from scratch
+using a set of various technologies.
+
+In this project, I will focus on programming a console to manage
+some of the necessary objects with, so that I will increase the
+developing process and manipulate a storage system without much
+concern of the visual interface.
+
+# Concepts
+In this project, I will learn and apply these concepts:
+  * Creating Python Packages
+  * Using "cmd" Python module
+  * Testing (particularly using "unittest" module)
+  * Serializng and Desrializng a class into and from JSON format
+  * Manipulating date and time using "datetime" Python module
+  * Learning how to generate Universal Unique IDs "UUID"
+  * Working with \*args and \*\*kwargs
