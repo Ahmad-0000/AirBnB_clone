@@ -1,5 +1,5 @@
 # AirBnB Clone - The Console
-![AirBnB_porject_logo](assets/AirBnB_project_logo.png)
+![AirBnB_porject_logo](/assets/AirBnB_project_logo.png)
 ## Description
 Have you ever visited this [website](https://www.airbnb.com/) ?
 Whether the answer is yes or no, I'm going to build a clone of it,
