@@ -9,15 +9,17 @@ class TestBaseModel(unittest.TestCase):
     """Testing "BaseModel" class"""
 
     def test_id_type(self):
-        """Testing "id" attribute type"""
+        """Testing "id" attribute presence and type"""
 
         m = BaseModel()
+        self.assertTrue(m.id)
         self.assertIs(type(m.id), str)
 
     def test_created_at(self):
-        """Testing "created_at" attribute type and values"""
+        """Testing "created_at" attribute presence, type and values"""
 
         m = BaseModel()
+        self.assertTrue(m.created_at)
         self.assertIs(type(m.created_at), type(datetime.datetime.now()))
         self.assertEqual(m.created_at.year, datetime.datetime.now().year)
         self.assertEqual(m.created_at.month, datetime.datetime.now().month)
@@ -26,9 +28,10 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(m.created_at.minute, datetime.datetime.now().minute)
 
     def test_updated_at(self):
-        """Testing "updated_at" attribute type and values"""
+        """Testing "updated_at" attribute presence, type and values"""
 
         m = BaseModel()
+        self.assertTrue(m.updated_at)
         self.assertIs(type(m.updated_at), type(datetime.datetime.now()))
         self.assertEqual(m.updated_at.year, datetime.datetime.now().year)
         self.assertEqual(m.updated_at.month, datetime.datetime.now().month)
@@ -37,10 +40,14 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(m.updated_at.minute, datetime.datetime.now().minute)
 
     def test___str___method(self):
-        """Testing "__str__" method return value type"""
+        """Testing "__str__" method return presence, value
+        value and type"""
 
         m = BaseModel()
+        self.assertTrue(m.__str__())
         self.assertIs(type(m.__str__()), str)
+        m_str = f'[{m.__class__.__name__}] ({m.id}) {m.__dict__}'
+        self.assertEqual(m.__str__(), m_str)
 
     def test_save_method(self):
         """Testing "save" method functionality"""
@@ -55,11 +62,12 @@ class TestBaseModel(unittest.TestCase):
         self.assertEqual(m.updated_at.minute, datetime.datetime.now().minute)
 
     def test_to_dict_method(self):
-        """Testing "to_dict" method functioality and return value type
-        and properties"""
+        """Testing "to_dict" method functioality and return value
+        presence, type and properties"""
 
         m = BaseModel()
         dict_repr = m.to_dict()
+        self.assertTrue(dict_repr)
         self.assertIs(type(dict_repr), dict)
         self.assertEqual(dict_repr['id'], m.id)
         self.assertEqual(dict_repr['created_at'], m.created_at.isoformat())
