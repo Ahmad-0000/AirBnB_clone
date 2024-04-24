@@ -1,0 +1,2 @@
+in "test_base_model.TestBaseModel":
+	I should consider testing auto-completion when **kwargs is not full
