@@ -4,6 +4,7 @@ import cmd
 import json
 import os
 from models.base_model import BaseModel
+from models.user import User
 from models import storage
 from models.engine.file_storage import FileStorage
 
@@ -12,6 +13,7 @@ class HBNBCommand(cmd.Cmd):
     """Command interpreter class to manipulte the "storage engine" """
 
     prompt = "(hbnb) "
+    classes = {"BaseModel": BaseModel, "User": User}
 
     def emptyline(self):
         """Overidden "emptyline" method"""
@@ -24,12 +26,14 @@ class HBNBCommand(cmd.Cmd):
 
         if arg == '':
             print('** class name missing **')
-        elif arg not in ['BaseModel']:
+        elif arg not in HBNBCommand.classes:
             print('** class doesn\'t exist **')
-        elif arg == 'BaseModel':
-            m = BaseModel()
-            m.save()
-            print(m.id)
+        else:
+            obj = HBNBCommand.classes[arg]()
+            obj.save()
+            print(obj.id)
+
+    do_new = do_create
 
     def do_show(self, arg):
         """Showing an object string representation based on
@@ -39,8 +43,8 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         else:
             arguments = arg.split()
-            class_name = arguments[0]
-            if class_name not in ['BaseModel']:
+            cls_name = arguments[0]
+            if cls_name not in HBNBCommand.classes.keys():
                 print("** class doesn't exist **")
             elif len(arguments) < 2:
                 print("** instance id missing **")
@@ -51,23 +55,24 @@ class HBNBCommand(cmd.Cmd):
                     with open(json_file, 'r', encoding='utf-8') as json_file:
                         json_str = json_file.read()
                         json_dict = json.loads(json_str)
-                        if f'BaseModel.{object_id}' not in json_dict.keys():
+                        if f'{cls_name}.{object_id}' not in json_dict.keys():
                             print("** no instance found **")
                         else:
-                            target_dict = json_dict[f'BaseModel.{object_id}']
-                            target_obj = BaseModel(**target_dict)
+                            classes = HBNBCommand.classes
+                            target_dict = json_dict[f'{cls_name}.{object_id}']
+                            target_obj = classes[cls_name](**target_dict)
                             print(target_obj)
 
     def do_destroy(self, arg):
         """Deleting an instance from the storage file"""
-        
+
         file_name = FileStorage.__dict__['_FileStorage__file_path']
         if not arg:
             print("** class name missing **")
         else:
             arguments = arg.split()
-            class_name = arguments[0]
-            if class_name not in ['BaseModel']:
+            cls_name = arguments[0]
+            if cls_name not in HBNBCommand.classes.keys():
                 print("** class doesn't exist **")
             elif len(arguments) < 2:
                 print("** instance id missing **")
@@ -77,12 +82,12 @@ class HBNBCommand(cmd.Cmd):
                     with open(file_name, 'r', encoding='utf-8') as json_file:
                         str_content = json_file.read()
                     dict_content = json.loads(str_content)
-                    if f'BaseModel.{object_id}' not in dict_content.keys():
+                    if f'{cls_name}.{object_id}' not in dict_content.keys():
                         print("** no instance found **")
                     else:
-                        del dict_content[f'BaseModel.{object_id}']
-                        with open(file_name, 'w', encoding='utf-8') as json_file:
-                            json_file.write(json.dumps(dict_content))
+                        del dict_content[f'{cls_name}.{object_id}']
+                        with open(file_name, 'w', encoding='utf-8') as j_file:
+                            j_file.write(json.dumps(dict_content))
                         storage.reload()
 
     def do_all(self, arg):
@@ -90,6 +95,7 @@ class HBNBCommand(cmd.Cmd):
         the instances of the class "arg". If "arg" is missing,
         all the intances representation will be in the list"""
 
+        classes = HBNBCommand.classes
         file_name = FileStorage.__dict__['_FileStorage__file_path']
         if os.path.isfile(file_name):
             with open(file_name, "r", encoding='utf-8') as json_file:
@@ -97,18 +103,20 @@ class HBNBCommand(cmd.Cmd):
                 dict_content = json.loads(str_content)
             objects_repr_list = []
             if arg:
-                class_name = arg
-                if class_name not in ['BaseModel']:
+                cls_name = arg
+                if cls_name not in classes.keys():
                     print("** class doesn't exist **")
                 else:
                     for key in dict_content.keys():
-                        if 'BaseModel' in key:
-                            target_object = BaseModel(**dict_content[key])
+                        if f'{cls_name}' in key:
+                            cls = classes[f'{cls_name}']
+                            target_object = cls(**dict_content[key])
                             objects_repr_list.append(str(target_object))
                     print(objects_repr_list)
             else:
                 for key in dict_content.keys():
-                    target_object = BaseModel(**dict_content[key])
+                    cls_name = key.split('.')[0]
+                    target_object = classes[cls_name](**dict_content[key])
                     objects_repr_list.append(str(target_object))
                 print(objects_repr_list)
 
@@ -120,12 +128,13 @@ class HBNBCommand(cmd.Cmd):
 
         types = [float, int, str, None, bool, dict, list, tuple, set, complex]
         file_name = FileStorage.__dict__['_FileStorage__file_path']
+        classes = HBNBCommand.classes
         if not arg:
             print("** class name missing **")
         else:
             arguments = arg.split()
-            class_name = arguments[0]
-            if class_name not in ['BaseModel']:
+            cls_name = arguments[0]
+            if cls_name not in classes:
                 print("** class doesn't exist **")
             elif len(arguments) < 2:
                 print("** instance id missing **")
@@ -135,7 +144,7 @@ class HBNBCommand(cmd.Cmd):
                     with open(file_name, 'r', encoding='utf-8') as json_file:
                         str_content = json_file.read()
                         dict_content = json.loads(str_content)
-                    if f'BaseModel.{object_id}' not in dict_content.keys():
+                    if f'{cls_name}.{object_id}' not in dict_content.keys():
                         print("** no instance found **")
                     else:
                         if len(arguments) < 3:
@@ -146,7 +155,7 @@ class HBNBCommand(cmd.Cmd):
                             else:
                                 attr = arguments[2]
                                 value = arguments[3]
-                                tar_key = f'BaseModel.{object_id}'
+                                tar_key = f'{cls_name}.{object_id}'
                                 target = dict_content[tar_key]
                                 if attr in target.keys():
                                     attr_type = type(target[attr])
@@ -154,7 +163,7 @@ class HBNBCommand(cmd.Cmd):
                                         if the_type == attr_type:
                                             target[attr] = the_type(value)
                                             f = file_name
-                                            mode = {'encoding':'utf-8'}
+                                            mode = {'encoding': 'utf-8'}
                                             with open(f, 'w', **mode) as jf:
                                                 dict_content[tar_key] = target
                                                 d_content = dict_content
@@ -162,17 +171,17 @@ class HBNBCommand(cmd.Cmd):
                                             break
                                         storage.reload()
                                 else:
-                                    tar_key = f'BaseModel.{object_id}'
+                                    tar_key = f'{cls_name}.{object_id}'
                                     target = dict_content[tar_key]
                                     target[attr] = value
-                                with open(file_name, "r", encoding='utf-8') as jf:
+                                f_name = file_name
+                                with open(f_name, "r", encoding='utf-8') as jf:
                                     str_content = jf.read()
                                     dict_content = json.loads(str_content)
                                     dict_content[tar_key] = target
-                                with open(file_name, 'w', encoding='utf-8') as jf:
+                                with open(f_name, 'w', encoding='utf-8') as jf:
                                     jf.write(json.dumps(dict_content))
                                 storage.reload()
-
 
     def do_quit(self, arg):
         """Quitting the interpreter"""
