@@ -2,6 +2,7 @@
 """My JSON "serializatin/deserialization" code module"""
 import json
 import os
+from datetime import datetime
 
 
 class FileStorage():
@@ -25,8 +26,7 @@ class FileStorage():
         """Serializing "__objects" to the JSON file in "__file_path" """
 
         with open(FileStorage.__file_path, "w", encoding="utf-8") as json_file:
-            file_content = json.dumps(FileStorage.__objects)
-            json_file.write(file_content)
+            json_file.write(json.dumps(FileStorage.__objects))
 
     def reload(self):
         """Desirializing the contents of the file in "__file_path" into
@@ -35,5 +35,5 @@ class FileStorage():
         if os.path.isfile(FileStorage.__file_path):
             file_path = FileStorage.__file_path
             with open(file_path, "r", encoding="utf-8") as json_file:
-                content = json_file.read()
-                FileStorage.__objects = json.loads(content)
+                file_content = json_file.read()
+                FileStorage.__objects = json.loads(file_content)
