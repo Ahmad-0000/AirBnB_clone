@@ -70,6 +70,8 @@ class HBNBCommand(cmd.Cmd):
                             target_dict = json_dict[f'{cls_name}.{object_id}']
                             target_obj = classes[cls_name](**target_dict)
                             print(target_obj)
+                else:
+                    print("** no instance found **")
 
     def do_destroy(self, arg):
         """Deleting an instance from the storage file"""
@@ -97,6 +99,8 @@ class HBNBCommand(cmd.Cmd):
                         with open(file_name, 'w', encoding='utf-8') as j_file:
                             j_file.write(json.dumps(dict_content))
                         storage.reload()
+                else:
+                    print("** no instance found **")
 
     def do_all(self, arg):
         """Printing all a list of string representation of all
@@ -127,6 +131,8 @@ class HBNBCommand(cmd.Cmd):
                     target_object = classes[cls_name](**dict_content[key])
                     objects_repr_list.append(str(target_object))
                 print(objects_repr_list)
+        else:
+            print("** no instance found **")
 
     def do_update(self, arg):
         """Updating inatance of "class_name" with the id "object_id"
@@ -190,6 +196,8 @@ class HBNBCommand(cmd.Cmd):
                                 with open(f_name, 'w', encoding='utf-8') as jf:
                                     jf.write(json.dumps(dict_content))
                                 storage.reload()
+                else:
+                    print("** no instance found **")
 
     def do_quit(self, arg):
         """Quitting the interpreter"""
