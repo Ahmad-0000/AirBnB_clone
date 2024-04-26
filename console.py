@@ -199,6 +199,35 @@ class HBNBCommand(cmd.Cmd):
                 else:
                     print("** no instance found **")
 
+    def do_User(self, arg):
+        """When using with the postfix ".all()", printing
+        a list containing string representation off all
+        user objects stored in the storage file"""
+
+        if not arg:
+            self.default("User")
+        elif arg != ".all()":
+            if arg[0] == '.':
+                self.default(f"User{arg}")
+            else:
+                self.default("User")
+        else:
+            filename = FileStorage.__dict__['_FileStorage__file_path']
+            if os.path.isfile(filename):
+                with open(filename, "r", encoding='utf-8') as json_file:
+                    str_content = json_file.read()
+                    dict_content = json.loads(str_content)
+                obj_list = []
+                for key in dict_content.keys():
+                    if "User." in key:
+                        obj_list.append(User(dict_content[key]).__str__())
+                if not obj_list:
+                    print("** no instance found**")
+                else:
+                    print(obj_list)
+            else:
+                print("** no instance found **")
+
     def do_quit(self, arg):
         """Quitting the interpreter"""
 
