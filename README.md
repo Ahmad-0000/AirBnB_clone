@@ -26,7 +26,7 @@ some of the necessary objects with, so that I will increase the
 developing process and manipulate a storage system without much
 concern of the visual interface.
 
-# Concepts
+# Objectives
 In this project, I will learn and apply these concepts:
   * Creating Python Packages
   * Using "cmd" Python module
