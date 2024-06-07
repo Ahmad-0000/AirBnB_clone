@@ -20,12 +20,23 @@ class TestFileStorage(unittest.TestCase):
         storage = FileStorage()
         storage.new(m)
         objects = storage.all()
-        self.assertEqual(m.to_dict(), objects[f'BaseModel.{m.id}'])
+        self.assertEqual(m.to_dict(), objects[f'BaseModel.{m.id}'].to_dict())
 
     def test_save(self):
         """Testing "save" method functionality, its created
         file existence and its content"""
+        from models.base_model import BaseModel
+        from models.place import Place
+        from models.amenity import Amenity
+        from models.city import City
+        from models.review import Review
+        from models.state import State
+        from models.user import User
 
+        classes = {'BaseModel': BaseModel, 'Place': Place,
+                   'Amenity': Amenity, 'City': City,
+                   'Review': Review, 'State': State,
+                   'User': User}
         m = BaseModel()
         storage = FileStorage()
         storage.new(m)
@@ -35,8 +46,15 @@ class TestFileStorage(unittest.TestCase):
         with open(json_file_name, 'r', encoding='utf-8') as json_file:
             json_file_content = json_file.read()
             storage.reload()
-            self.assertEqual(json_file_content, json.dumps(storage.all()))
-            self.assertEqual(storage.all(), json.loads(json_file_content))
+            objects_dict = {}
+            for key, value in storage.all().items():
+                objects_dict[key] = value.to_dict()
+            self.assertEqual(json_file_content, json.dumps(objects_dict))
+            objects_from_json = json.loads(json_file_content)
+            save_method_output = {}
+            for key, obj in storage.all().items():
+                save_method_output[key] = obj.to_dict()
+            self.assertEqual(save_method_output, objects_from_json)
             self.assertIs(type(json.loads(json_file_content)), dict)
 
     def test_reload_method(self):
@@ -53,7 +71,11 @@ class TestFileStorage(unittest.TestCase):
             self.assertTrue(os.path.isfile(json_file_name))
             with open(json_file_name, "r", encoding='utf-8') as json_file:
                 storage.reload()
-                self.assertEqual(json.load(json_file), storage.all())
+                objects_from_file = json.load(json_file)
+                __objects = {}
+                for key, obj in storage.all().items():
+                    __objects[key] = obj.to_dict()
+                self.assertEqual(objects_from_file, __objects)
                 self.assertIs(type(storage.all()), dict)
         if os.path.isfile(json_file_name):
             os.remove(json_file_name)
