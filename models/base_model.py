@@ -42,7 +42,7 @@ class BaseModel():
         """Setting the update time to now and saving the
         object into JSON file through "storage" instance"""
 
-        self.updated_at = datetime.datetime.now()
+        # self.updated_at = datetime.datetime.now()
         storage.save()
 
     def to_dict(self):
