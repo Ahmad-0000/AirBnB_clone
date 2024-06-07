@@ -16,14 +16,15 @@ class BaseModel():
                 if key == "__class__":
                     pass
                 elif key == "created_at" or key == "updated_at":
-                    value = datetime.datetime.fromisoformat(kwargs[f'{key}'])
-                    self.__dict__[f'{key}'] = value
+                    value = datetime.datetime.fromisoformat(kwargs[key])
+                    self.__dict__[key] = value
                 else:
-                    self.__dict__[f'{key}'] = kwargs[f'{key}']
+                    self.__dict__[key] = kwargs[key]
             if 'id' not in kwargs.keys():
                 self.id = str(uuid.uuid4())
             if 'created_at' not in kwargs.keys():
                 self.created_at = datetime.datetime.now()
+                self.updated_at = self.created_at
             if 'updated_at' not in kwargs.keys():
                 self.updated_at = self.created_at
         else:
@@ -49,8 +50,8 @@ class BaseModel():
 
         dict_repr = {}
         for key in self.__dict__.keys():
-            dict_repr[f'{key}'] = self.__dict__[f'{key}']
+            dict_repr[key] = self.__dict__[key]
         dict_repr['created_at'] = self.created_at.isoformat()
         dict_repr['updated_at'] = self.updated_at.isoformat()
-        dict_repr['__class__'] = f'{self.__class__.__name__}'
+        dict_repr['__class__'] = self.__class__.__name__
         return dict_repr
